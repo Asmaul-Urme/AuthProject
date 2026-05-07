@@ -1,0 +1,28 @@
+{% load static %} 
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Home</title>
+   
+    <link rel="stylesheet" href="{% static "styles/styles.css" %}%}">
+  </head>
+  <body>
+    <div class= "container">
+      <h2>Home</h2>
+      <p>
+        Welcome, {{request.user.username}}!!
+      </p>
+      <a href ="{% url 'protected' %}">Go To Your Protected Page</a>
+      <form action ="{% url 'logout' %}" method = "POST">
+        {% csrf_token %}
+        <button type = "submit">Logout</button>
+      </form>
+
+    </div>
+   
+    
+    <script src="" async defer></script>
+  </body>
+</html>

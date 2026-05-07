@@ -2,9 +2,9 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.view import  Views
+from django.views import  View
 #import the User class (model) 
-from django.models import User
+from django.contrib.auth.models import User
 #import the RegitrationForm from forms.py
 from .forms import RegistrationForm
 
@@ -14,7 +14,7 @@ from .forms import RegistrationForm
 
 
 # Create your views here.
-def resister_view(request):
+def register_view(request):
   if request.method == "POST":
     form = RegistrationForm(request.POST)
     if form.is_valid():
@@ -25,7 +25,7 @@ def resister_view(request):
       return redirect('home')
   else:
     form = RegistrationForm()
-    return render(request, 'accounts/register.html',{'form'.form} )
+  return render(request, 'accounts/register.html',{'form'.form} )
 
 
 
@@ -36,12 +36,19 @@ def login_view(request):
     user = authenticate(request, username=username,password=password)
     if user is not None:
       login(request,user)
-      request.POST.get('next') or request.GET.get('next') or 'home'
+      next_url = (request.POST.get('next') 
+      or request.GET.get('next') 
+      or 'home')
       return redirect(next_url)
 
     else:
       error_message = "Invalid Credentials"
-  return render(request, 'acciunts/login.html',{'error':error_message})
+      return render(
+                request,
+                'accounts/login.html',
+                {'error': error_message}
+            )
+  return render(request,'accounts/login.html')
 
 def logout_view(request):
   if request.method =="POST":
@@ -55,9 +62,9 @@ def logout_view(request):
 #Using the decoratoe
 @login_required
 def home_view(request):
-  return render(request,'home/home.html')
+  return render(request,'auth1_app/home.html')
 #protected view
-class ProtectedView(LoginRequiredMixin,Views):
+class ProtectedView(LoginRequiredMixin,View):
   login_url ='/login/'
   #'next ' - to redirect URL
   redirected_field_name = 'redirect_to'
